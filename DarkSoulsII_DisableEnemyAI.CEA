@@ -1,0 +1,66 @@
+{ Game   : DarkSoulsII.exe
+  Version: SOTFS
+  Date   : 2022-01-07
+  Author : GrandpaGameHacker
+
+  This script disables AI
+  Specifically, it stops the ai state from updating to attack
+}
+
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+ 
+ 
+aobscanmodule(EnemyAI_Function,DarkSoulsII.exe,48 89 6C 24 18 48 89 74 24 20 41 56 48 83 EC 60 48) // should be unique
+alloc(EnemyAI_DisableCode,$1000,EnemyAI_Function)
+
+label(code)
+label(return)
+
+EnemyAI_DisableCode:
+ret
+code:
+  mov [rsp+18],rbp
+  jmp return
+
+EnemyAI_Function:
+  jmp EnemyAI_DisableCode
+return:
+registersymbol(EnemyAI_Function)
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+EnemyAI_Function:
+  db 48 89 6C 24 18
+
+unregistersymbol(EnemyAI_Function)
+dealloc(EnemyAI_DisableCode)
+
+{
+// ORIGINAL CODE - INJECTION POINT: DarkSoulsII.exe+39A9B0
+
+DarkSoulsII.exe+39A9A6: CC                    - int 3 
+DarkSoulsII.exe+39A9A7: CC                    - int 3 
+DarkSoulsII.exe+39A9A8: CC                    - int 3 
+DarkSoulsII.exe+39A9A9: CC                    - int 3 
+DarkSoulsII.exe+39A9AA: CC                    - int 3 
+DarkSoulsII.exe+39A9AB: CC                    - int 3 
+DarkSoulsII.exe+39A9AC: CC                    - int 3 
+DarkSoulsII.exe+39A9AD: CC                    - int 3 
+DarkSoulsII.exe+39A9AE: CC                    - int 3 
+DarkSoulsII.exe+39A9AF: CC                    - int 3 
+// ---------- INJECTING HERE ----------
+DarkSoulsII.exe+39A9B0: 48 89 6C 24 18        - mov [rsp+18],rbp
+// ---------- DONE INJECTING  ----------
+DarkSoulsII.exe+39A9B5: 48 89 74 24 20        - mov [rsp+20],rsi
+DarkSoulsII.exe+39A9BA: 41 56                 - push r14
+DarkSoulsII.exe+39A9BC: 48 83 EC 60           - sub rsp,60
+DarkSoulsII.exe+39A9C0: 48 8B 41 08           - mov rax,[rcx+08]
+DarkSoulsII.exe+39A9C4: 48 8B F1              - mov rsi,rcx
+DarkSoulsII.exe+39A9C7: 48 8B EA              - mov rbp,rdx
+DarkSoulsII.exe+39A9CA: 48 8B 88 90 03 00 00  - mov rcx,[rax+00000390]
+DarkSoulsII.exe+39A9D1: 32 D2                 - xor dl,dl
+DarkSoulsII.exe+39A9D3: 48 85 C9              - test rcx,rcx
+DarkSoulsII.exe+39A9D6: 74 07                 - je DarkSoulsII.exe+39A9DF
+}
