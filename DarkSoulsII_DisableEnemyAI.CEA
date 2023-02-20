@@ -13,29 +13,18 @@
  
  
 aobscanmodule(EnemyAI_Function,DarkSoulsII.exe,48 89 6C 24 18 48 89 74 24 20 41 56 48 83 EC 60 48) // should be unique
-alloc(EnemyAI_DisableCode,$1000,EnemyAI_Function)
-
-label(code)
-label(return)
-
-EnemyAI_DisableCode:
-ret
-code:
-  mov [rsp+18],rbp
-  jmp return
 
 EnemyAI_Function:
-  jmp EnemyAI_DisableCode
-return:
+  ret
+
 registersymbol(EnemyAI_Function)
 
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
 EnemyAI_Function:
-  db 48 89 6C 24 18
+  db 48
 
 unregistersymbol(EnemyAI_Function)
-dealloc(EnemyAI_DisableCode)
 
 {
 // ORIGINAL CODE - INJECTION POINT: DarkSoulsII.exe+39A9B0
